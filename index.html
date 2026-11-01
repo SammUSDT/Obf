@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Obfuscator - Db Syntax</title>
+    <!-- Library Obfuscator via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Poppins:wght@300;400;600&display=swap');
+
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --border: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            gap: 20px;
+            padding: 0 20px 20px 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .panel {
+            flex: 1;
+            background-color: var(--panel-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .panel-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        .panel-header h2 {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        textarea {
+            flex: 1;
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            padding: 20px;
+            resize: none;
+            outline: none;
+            line-height: 1.6;
+        }
+
+        textarea::placeholder {
+            color: #475569;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        button.secondary:hover {
+            background-color: rgba(255,255,255,0.05);
+            color: var(--text-main);
+        }
+
+        button.success {
+            background-color: var(--success);
+        }
+
+        .options {
+            padding: 20px;
+            background-color: var(--panel-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin: 0 20px 20px 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .options input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+        }
+
+        .status {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+
+        .status.ready { color: var(--success); }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            .panel {
+                min-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>JS Obfuscator</h1>
+        <p>Amankan kode JavaScript kamu dengan enkripsi tingkat tinggi (Client-Side)</p>
+    </header>
+
+    <div class="options">
+        <label>
+            <input type="checkbox" id="opt-controlFlow" checked>
+            Control Flow Flattening
+        </label>
+        <label>
+            <input type="checkbox" id="opt-deadCode" checked>
+            Dead Code Injection
+        </label>
+        <label>
+            <input type="checkbox" id="opt-selfDefending" checked>
+            Self Defending
+        </label>
+        <label>
+            <input type="checkbox" id="opt-stringArray" checked>
+            String Array Encoding (Base64)
+        </label>
+        <div class="status ready" id="statusText">✓ Engine Ready</div>
+    </div>
+
+    <div class="container">
+        <!-- Panel Input -->
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Input Code</h2>
+                <div class="btn-group">
+                    <button class="secondary" onclick="clearInput()">Clear</button>
+                </div>
+            </div>
+            <textarea id="inputCode" placeholder="// Tempel kode JavaScript kamu di sini...&#10;console.log('Hello World!');"></textarea>
+        </div>
+
+        <!-- Panel Output -->
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Obfuscated Output</h2>
+                <div class="btn-group">
+                    <button class="success" onclick="copyOutput()">Copy</button>
+                    <button onclick="downloadOutput()">Download</button>
+                </div>
+            </div>
+            <textarea id="outputCode" placeholder="// Hasil obfuscate akan muncul di sini..." readonly></textarea>
+        </div>
+    </div>
+
+    <!-- Tombol Eksekusi Utama -->
+    <div style="text-align: center; padding-bottom: 30px;">
+        <button onclick="obfuscateCode()" style="padding: 15px 40px; font-size: 1.1rem; border-radius: 50px;">
+            🚀 Obfuscate Sekarang
+        </button>
+    </div>
+
+    <script>
+        const inputCode = document.getElementById('inputCode');
+        const outputCode = document.getElementById('outputCode');
+        const statusText = document.getElementById('statusText');
+
+        function clearInput() {
+            inputCode.value = '';
+            outputCode.value = '';
+            statusText.innerText = '✓ Engine Ready';
+            statusText.classList.add('ready');
+        }
+
+        function obfuscateCode() {
+            const code = inputCode.value.trim();
+            if (!code) {
+                alert('⚠️ Silakan masukkan kode JavaScript terlebih dahulu!');
+                return;
+            }
+
+            statusText.innerText = '⏳ Processing...';
+            statusText.classList.remove('ready');
+
+            // Ambil opsi dari checkbox
+            const options = {
+                compact: true,
+                controlFlowFlattening: document.getElementById('opt-controlFlow').checked,
+                controlFlowFlatteningThreshold: 0.75,
+                deadCodeInjection: document.getElementById('opt-deadCode').checked,
+                deadCodeInjectionThreshold: 0.4,
+                debugProtection: false,
+                debugProtectionInterval: 0,
+                disableConsoleOutput: false,
+                identifierNamesGenerator: 'hexadecimal',
+                log: false,
+                numbersToExpressions: true,
+                renameGlobals: false,
+                selfDefending: document.getElementById('opt-selfDefending').checked,
+                simplify: true,
+                splitStrings: true,
+                splitStringsChunkLength: 10,
+                stringArray: document.getElementById('opt-stringArray').checked,
+                stringArrayCallsTransform: true,
+                stringArrayCallsTransformThreshold: 0.5,
+                stringArrayEncoding: ['base64'],
+                stringArrayIndexShift: true,
+                stringArrayRotate: true,
+                stringArrayShuffle: true,
+                stringArrayWrappersCount: 2,
+                stringArrayWrappersChainedCalls: true,
+                stringArrayWrappersParametersMaxCount: 4,
+                stringArrayWrappersType: 'function',
+                stringArrayThreshold: 0.75,
+                transformObjectKeys: true,
+                unicodeEscapeSequence: false
+            };
+
+            try {
+                // Eksekusi Obfuscator (Library dimuat dari CDN)
+                const result = JavaScriptObfuscator.obfuscate(code, options);
+                const obfuscated = result.getObfuscatedCode();
+
+                // Tampilkan hasil
+                outputCode.value = obfuscated;
+                
+                // Update status
+                statusText.innerText = '✅ Obfuscation Complete!';
+                statusText.classList.add('ready');
+
+            } catch (error) {
+                console.error(error);
+                alert('❌ Gagal melakukan obfuscate: ' + error.message);
+                statusText.innerText = '❌ Error';
+                statusText.classList.remove('ready');
+            }
+        }
+
+        function copyOutput() {
+            if (!outputCode.value) {
+                alert('⚠️ Belum ada hasil untuk dicopy!');
+                return;
+            }
+            outputCode.select();
+            document.execCommand('copy');
+            
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = 'Copied!';
+            setTimeout(() => { btn.innerText = originalText; }, 2000);
+        }
+
+        function downloadOutput() {
+            if (!outputCode.value) {
+                alert('⚠️ Belum ada hasil untuk didownload!');
+                return;
+            }
+            const blob = new Blob([outputCode.value], { type: 'application/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'obfuscated_code.js';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
